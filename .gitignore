@@ -1,0 +1,47 @@
+# Private datasets and derived annotations
+data/**
+datasets/**
+!data/README.md
+!datasets/README.md
+
+# Model weights and full experiment outputs
+checkpoints/**
+weights/**
+work_dirs/**
+runs/**
+raw_logs/**
+logs/**
+*.log
+tensorboard/**
+tb_logs/**
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.pkl
+
+# Local configuration and credentials
+.env
+.env.*
+*.key
+*.pem
+id_rsa*
+id_ed25519*
+
+# Python and editor artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.idea/
+.vscode/
+
+# Generated output
+outputs/
+predictions/
+*.egg-info/
+build/
+dist/

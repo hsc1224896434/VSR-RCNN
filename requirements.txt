@@ -1,0 +1,7 @@
+# Framework wheels are CUDA-specific. Install Python 3.7.13, PyTorch 1.8.1,
+# torchvision, and a compatible MMCV-Full 1.x wheel before installing these.
+# The manuscript reports CUDA 10.1 and cuDNN 7.6.5.
+numpy<2
+pycocotools>=2.0.4
+terminaltables
+tqdm
