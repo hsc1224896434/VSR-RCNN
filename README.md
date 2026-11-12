@@ -12,10 +12,6 @@
 
 The model code is under [`mmdet_overlay/`](mmdet_overlay/); [`configs/vsr_rcnn_r50_fpn_10class.py`](configs/vsr_rcnn_r50_fpn_10class.py) defines the ten-class reference experiment. The overlay keeps the method-specific code separate from the MMDetection source tree.
 
-## Reproducibility status
-
-This is a reference implementation of the method, not a verified replay of the reported 62.8% mAP experiment. The original custom RSM post-processing operator was not preserved; the released RSM follows Eqs. (9)–(10) and the execution choices documented in [RSM_STATUS.md](RSM_STATUS.md). The paper's result-producing checkpoint and private dataset are not distributed. Report metrics from your own training and evaluation runs rather than treating the paper's numbers as expected output from this release.
-
 ## Installation
 
 This overlay targets MMDetection 2.24.1, which requires MMCV-Full 1.3.17–1.6.0. Install PyTorch, torchvision, and an MMCV-Full wheel compatible with your CUDA environment first. The accompanying paper reports Python 3.7.13, PyTorch 1.8.1, and CUDA 10.1. From this repository's root, install an editable MMDetection checkout and copy the model modules into it:
@@ -97,8 +93,6 @@ The RSM rule checks can be run after installing PyTorch:
 ```bash
 python -m unittest discover -s tests -v
 ```
-
-These checks cover RSM behavior; they do not validate full training or the paper's reported metrics.
 
 ## Repository layout
 

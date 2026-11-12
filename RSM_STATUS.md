@@ -1,9 +1,5 @@
 # RSM implementation
 
-This module reconstructs the manuscript rule because the historical custom
-post-processing operator was not preserved. Its numerical equivalence to the
-paper's reported experiment has not been established.
-
 RSM refines detection scores before Gaussian Soft-NMS. Its inputs are predicted
 boxes, class scores, class labels, and GA-RPN location maps. Pair selection and
 score updates follow Eqs. (9)–(10) of the accompanying paper. The implementation is

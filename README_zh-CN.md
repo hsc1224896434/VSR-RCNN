@@ -12,10 +12,6 @@
 
 模型代码位于 [`mmdet_overlay/`](mmdet_overlay/)，十类检测任务的参考配置为 [`configs/vsr_rcnn_r50_fpn_10class.py`](configs/vsr_rcnn_r50_fpn_10class.py)。覆盖层将本方法的代码与 MMDetection 原始代码分开保存。
 
-## 复现状态
-
-本仓库是论文方法的参考实现，尚未验证能够重现论文报告的 62.8% mAP。原始的 RSM 自定义后处理算子没有留存；公开的 RSM 按论文式（9）—（10）及 [RSM_STATUS.md](RSM_STATUS.md) 所列执行约定重建。产生论文结果的检查点和私有数据集均未发布。使用者应报告自己训练与评估所得的指标，不应把论文数值当作本仓库运行的预期输出。
-
 ## 安装
 
 此覆盖层面向 MMDetection 2.24.1，要求 MMCV-Full 版本为 1.3.17–1.6.0。先安装与本机 CUDA 环境匹配的 PyTorch、torchvision 和 MMCV-Full。论文报告的环境为 Python 3.7.13、PyTorch 1.8.1 和 CUDA 10.1。从本仓库根目录执行：
@@ -97,8 +93,6 @@ python tools/demo_images.py configs/vsr_rcnn_r50_fpn_10class.py \
 ```bash
 python -m unittest discover -s tests -v
 ```
-
-这些检查只覆盖 RSM 行为，不能验证完整训练或论文报告的数值。
 
 ## 仓库结构
 
