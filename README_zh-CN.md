@@ -12,9 +12,13 @@
 
 模型代码位于 [`mmdet_overlay/`](mmdet_overlay/)，十类检测任务的参考配置为 [`configs/vsr_rcnn_r50_fpn_10class.py`](configs/vsr_rcnn_r50_fpn_10class.py)。覆盖层将本方法的代码与 MMDetection 原始代码分开保存。
 
+## 复现状态
+
+本仓库是论文方法的参考实现，尚未验证能够重现论文报告的 62.8% mAP。原始的 RSM 自定义后处理算子没有留存；公开的 RSM 按论文式（9）—（10）及 [RSM_STATUS.md](RSM_STATUS.md) 所列执行约定重建。产生论文结果的检查点和私有数据集均未发布。使用者应报告自己训练与评估所得的指标，不应把论文数值当作本仓库运行的预期输出。
+
 ## 安装
 
-此覆盖层面向 MMDetection 2.24.1。先安装与本机 CUDA 环境匹配的 PyTorch、torchvision 和 MMCV-Full 1.x。论文报告的环境为 Python 3.7.13、PyTorch 1.8.1 和 CUDA 10.1。从本仓库根目录执行：
+此覆盖层面向 MMDetection 2.24.1，要求 MMCV-Full 版本为 1.3.17–1.6.0。先安装与本机 CUDA 环境匹配的 PyTorch、torchvision 和 MMCV-Full。论文报告的环境为 Python 3.7.13、PyTorch 1.8.1 和 CUDA 10.1。从本仓库根目录执行：
 
 ```bash
 git clone --branch v2.24.1 https://github.com/open-mmlab/mmdetection.git ../mmdetection
@@ -78,13 +82,31 @@ python tools/test.py configs/vsr_rcnn_r50_fpn_10class.py \
 
 将 `path/to/checkpoint.pth` 替换为训练得到的检查点。参考配置默认启用 RSM。如需用**同一个**检查点比较关闭 RSM 的推理结果，可在测试命令后添加 `--cfg-options model.test_cfg.rcnn.rsm.enabled=False`。RSM 统计量应由该检查点对应版本的训练集标注生成。
 
+如果只需按图片顺序模拟巡检、保存检测可视化结果，不需要标注文件，可以运行：
+
+```bash
+python tools/demo_images.py configs/vsr_rcnn_r50_fpn_10class.py \
+  path/to/checkpoint.pth data/line_fittings/val2017 \
+  --output-dir outputs/inspection_demo
+```
+
+`--score-thr` 只控制画出哪些框；计算 AP 等量化指标仍使用带 COCO 标注的 `tools/test.py`。演示脚本会打印每张图片的推理耗时。
+
+安装 PyTorch 后可运行 RSM 规则检查：
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+这些检查只覆盖 RSM 行为，不能验证完整训练或论文报告的数值。
+
 ## 仓库结构
 
 | 路径 | 内容 |
 | --- | --- |
 | [`configs/`](configs/) | 十类模型、数据与训练配置 |
 | [`mmdet_overlay/`](mmdet_overlay/) | GA-RPN、关系推理模块、检测器与 RSM |
-| [`tools/`](tools/) | 安装、标注转换、先验生成、训练与评估脚本 |
+| [`tools/`](tools/) | 安装、标注转换、先验生成、训练、评估与逐图演示脚本 |
 | [`RSM_STATUS.md`](RSM_STATUS.md) | RSM 配对、得分更新和推理参数 |
 
 ## 许可证

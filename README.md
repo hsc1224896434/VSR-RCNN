@@ -12,9 +12,13 @@
 
 The model code is under [`mmdet_overlay/`](mmdet_overlay/); [`configs/vsr_rcnn_r50_fpn_10class.py`](configs/vsr_rcnn_r50_fpn_10class.py) defines the ten-class reference experiment. The overlay keeps the method-specific code separate from the MMDetection source tree.
 
+## Reproducibility status
+
+This is a reference implementation of the method, not a verified replay of the reported 62.8% mAP experiment. The original custom RSM post-processing operator was not preserved; the released RSM follows Eqs. (9)–(10) and the execution choices documented in [RSM_STATUS.md](RSM_STATUS.md). The paper's result-producing checkpoint and private dataset are not distributed. Report metrics from your own training and evaluation runs rather than treating the paper's numbers as expected output from this release.
+
 ## Installation
 
-This overlay targets MMDetection 2.24.1. Install PyTorch, torchvision, and an MMCV-Full 1.x wheel compatible with your CUDA environment first. The accompanying paper reports Python 3.7.13, PyTorch 1.8.1, and CUDA 10.1. From this repository's root, install an editable MMDetection checkout and copy the model modules into it:
+This overlay targets MMDetection 2.24.1, which requires MMCV-Full 1.3.17–1.6.0. Install PyTorch, torchvision, and an MMCV-Full wheel compatible with your CUDA environment first. The accompanying paper reports Python 3.7.13, PyTorch 1.8.1, and CUDA 10.1. From this repository's root, install an editable MMDetection checkout and copy the model modules into it:
 
 ```bash
 git clone --branch v2.24.1 https://github.com/open-mmlab/mmdetection.git ../mmdetection
@@ -78,13 +82,31 @@ python tools/test.py configs/vsr_rcnn_r50_fpn_10class.py \
 
 Replace `path/to/checkpoint.pth` with a checkpoint from your training run. RSM is enabled in the reference configuration. For an inference comparison using the **same** checkpoint with RSM disabled, add `--cfg-options model.test_cfg.rcnn.rsm.enabled=False` to the test command. Use RSM statistics generated from the training annotations corresponding to that checkpoint.
 
+To simulate image-by-image inspection without annotations, run the detector on a folder of images and save the visualizations:
+
+```bash
+python tools/demo_images.py configs/vsr_rcnn_r50_fpn_10class.py \
+  path/to/checkpoint.pth data/line_fittings/val2017 \
+  --output-dir outputs/inspection_demo
+```
+
+`--score-thr` changes only which boxes are drawn; use `tools/test.py` with COCO annotations for quantitative AP evaluation. The demo prints inference time for each image.
+
+The RSM rule checks can be run after installing PyTorch:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+These checks cover RSM behavior; they do not validate full training or the paper's reported metrics.
+
 ## Repository layout
 
 | Path | Contents |
 | --- | --- |
 | [`configs/`](configs/) | Ten-class model, data, and training configuration |
 | [`mmdet_overlay/`](mmdet_overlay/) | GA-RPN, reasoning heads, detector, and RSM |
-| [`tools/`](tools/) | Installation, annotation normalization, prior generation, training, and evaluation |
+| [`tools/`](tools/) | Installation, annotation normalization, prior generation, training, evaluation, and image demo |
 | [`RSM_STATUS.md`](RSM_STATUS.md) | RSM pair selection, score update, and inference settings |
 
 ## License
