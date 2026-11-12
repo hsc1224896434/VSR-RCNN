@@ -1,8 +1,8 @@
-# Re-Scoring Module (RSM): implementation details
+# RSM implementation
 
-The RSM code implements the bolt–component relation and score update in the
-SIVP manuscript, Eqs. (9)–(10). Its inputs are predicted boxes, class scores,
-class labels, and GA-RPN location maps. The main implementation is
+RSM refines detection scores before Gaussian Soft-NMS. Its inputs are predicted
+boxes, class scores, class labels, and GA-RPN location maps. Pair selection and
+score updates follow Eqs. (9)–(10) of the accompanying paper. The implementation is
 [`rsm.py`](mmdet_overlay/mmdet/core/post_processing/rsm.py); it is called by
 [`hk_center_bbox_nms.py`](mmdet_overlay/mmdet/core/post_processing/hk_center_bbox_nms.py).
 
@@ -40,20 +40,19 @@ bilinearly resized to the padded image before sampling.
 
 A box may belong to several qualifying pairs. The implementation applies its
 largest single increment, then clips the updated score to `[0, 1]`. A pair
-that fails Eq. (9c) receives no increment; its original detections remain
-available to post-processing. The pre-NMS score threshold is `0.001`.
-Gaussian Soft-NMS then uses `sigma=0.5` and retains at most 100 detections per
-image in the reference configuration.
+that fails the selection rule receives no increment; its original detections
+remain available to post-processing.
 
-## Source correspondence
+## Inference order and configuration
 
-The surviving detector source passes GA-RPN location predictions through the
-RoI head to a custom center-NMS call. This repository provides the RSM scoring
-step directly in `rsm.py` and uses MMCV Soft-NMS for suppression. The
-manuscript does not prescribe every software convention for multiple pairs,
-eligible-category selection, clipping, and pyramid-level sampling; the
-choices above make those cases explicit and deterministic.
+The detector passes GA-RPN location predictions to the RoI head and then to
+`multiclass_center_nms`. Predictions with an original score at or below
+`0.001` are removed before re-scoring. RSM updates the remaining scores, and
+MMCV's Gaussian Soft-NMS performs class-wise suppression with `sigma=0.5` and
+`min_score=0.05`. The [reference configuration](configs/vsr_rcnn_r50_fpn_10class.py)
+retains at most 100 detections per image. The multiple-pair rule, category
+eligibility, clipping, and pyramid-level sampling above specify the behavior
+of this implementation.
 
-The confidential dataset and result-producing checkpoint are not included.
-The manuscript's numerical results therefore require their original
-experimental materials for independent reproduction.
+The threshold statistics are data dependent. Generate `rsm_stats.json` from
+the training annotations used for the corresponding checkpoint before inference.
