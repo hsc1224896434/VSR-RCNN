@@ -14,7 +14,7 @@
 
 ## 安装
 
-参考环境为 Python 3.7.13、PyTorch 1.8.1、CUDA 10.1 和 MMDetection 2.24.1。先安装与本机 CUDA 环境匹配的 PyTorch、torchvision 和 MMCV-Full 1.x。从本仓库根目录执行：
+此覆盖层面向 MMDetection 2.24.1。先安装与本机 CUDA 环境匹配的 PyTorch、torchvision 和 MMCV-Full 1.x。论文报告的环境为 Python 3.7.13、PyTorch 1.8.1 和 CUDA 10.1。从本仓库根目录执行：
 
 ```bash
 git clone --branch v2.24.1 https://github.com/open-mmlab/mmdetection.git ../mmdetection

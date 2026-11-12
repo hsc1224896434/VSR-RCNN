@@ -14,7 +14,7 @@ The model code is under [`mmdet_overlay/`](mmdet_overlay/); [`configs/vsr_rcnn_r
 
 ## Installation
 
-The reference environment uses Python 3.7.13, PyTorch 1.8.1, CUDA 10.1, and MMDetection 2.24.1. Install PyTorch, torchvision, and an MMCV-Full 1.x wheel compatible with your CUDA environment first. From this repository's root, install an editable MMDetection checkout and copy the model modules into it:
+This overlay targets MMDetection 2.24.1. Install PyTorch, torchvision, and an MMCV-Full 1.x wheel compatible with your CUDA environment first. The accompanying paper reports Python 3.7.13, PyTorch 1.8.1, and CUDA 10.1. From this repository's root, install an editable MMDetection checkout and copy the model modules into it:
 
 ```bash
 git clone --branch v2.24.1 https://github.com/open-mmlab/mmdetection.git ../mmdetection
